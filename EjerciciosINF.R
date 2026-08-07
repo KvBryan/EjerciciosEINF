@@ -22,15 +22,14 @@
 # Escriba su código aquí:
 
 
-# Problema 4. Diseño del tamaño de una inspección ----
-# Escriba su código aquí:
-
-
-
 # ==============================================================================
 # BLOQUE B: Distribución de Poisson ----
 # Responsable: [Integrante 2]
 # ==============================================================================
+
+# Problema 4. Diseño del tamaño de una inspección ----
+# Escriba su código aquí:
+
 
 # Problema 5. Siniestralidad en carretera urbana ----
 # Escriba su código aquí:
@@ -38,6 +37,11 @@
 
 # Problema 6. Dimensionamiento de un centro de llamadas ----
 # Escriba su código aquí:
+
+# ==============================================================================
+# BLOQUE C: Distribución geométrica ----
+# Responsable: [Integrante 3]
+# ==============================================================================
 
 
 # Problema 7. Procesos de Poisson simultáneos e independientes ----
@@ -48,15 +52,13 @@
 # Escriba su código aquí:
 
 
-
-# ==============================================================================
-# BLOQUE C: Distribución geométrica ----
-# Responsable: [Integrante 3]
-# ==============================================================================
-
 # Problema 9. Validación de códigos de descuento ----
 # Escriba su código aquí:
 
+# ==============================================================================
+# BLOQUE D: Distribución binomial negativa ----
+# Responsable: [Integrante 4]
+# ==============================================================================
 
 # Problema 10. Rechazo de transacciones por sospecha de fraude ----
 # Escriba su código aquí:
@@ -67,13 +69,13 @@
 
 
 
-# ==============================================================================
-# BLOQUE D: Distribución binomial negativa ----
-# Responsable: [Integrante 4]
-# ==============================================================================
-
 # Problema 12. Muestreo hasta detectar defectos ----
 # Escriba su código aquí:
+
+# ==============================================================================
+# BLOQUE E: Distribución hipergeométrica ----
+# Responsable: [Integrante 5]
+# ==============================================================================
 
 
 # Problema 13. Contactación hasta lograr entrevistas ----
@@ -84,12 +86,6 @@
 # Escriba su código aquí:
 
 
-
-# ==============================================================================
-# BLOQUE E: Distribución hipergeométrica ----
-# Responsable: [Integrante 5]
-# ==============================================================================
-
 # Problema 15. Auditoría de un lote de servidores ----
 # Escriba su código aquí:
 
@@ -98,11 +94,12 @@
 # Escriba su código aquí:
 
 
-
 # ==============================================================================
 # BLOQUE F: Problemas integradores ----
 # Responsable: [Integrante 6]
 # ==============================================================================
+
+
 
 # Problema 17. Identificación del modelo probabilístico apropiado ----
 # Escriba su código aquí:
