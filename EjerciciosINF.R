@@ -206,7 +206,37 @@ minimo_agentes
 
 
 # Problema 17. Identificación del modelo probabilístico apropiado ----
-# Escriba su código aquí:
+# literal (a) 
+# Distribución hipergeométrica
+ N <- 300 # Total de usuarios
+ K <- 6 # Número de bots 
+ n <- 40 # Tamaño de la muestra
+ x <- 3 # Bots que se desean encontrar
+ prob_17a <- dhyp er(x, K, N - K, n) 
+ round(prob_17a, 4)
+
+# literal (b)
+# Distribución de Poisson 
+lambda <- 2.5 * 3 
+prob_17b <- dpois(6, lambda) 
+round(prob_17b, 4)
+
+# literal (c)
+# Distribución binomial negativa
+p <- 0.30 
+r <- 2 
+intentos <- 6 
+fracasos <- intentos - r 
+prob_17c <- dnbinom(fracasos, size = r, prob = p) 
+round(prob_17c, 4)
+
+# literal (d)
+# Distribución binomial
+n <- 12 
+p <- 0.25 
+prob_17d <- 1 - pbinom(3, size = n, prob = p) 
+round(prob_17d, 4)
+
 
 
 # Problema 18. Contrastación de una tasa de fallas contractual ----
