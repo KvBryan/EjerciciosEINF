@@ -322,16 +322,70 @@ round(esperanza_adicional_9d, 4)
 # ==============================================================================
 
 # Problema 10. Rechazo de transacciones por sospecha de fraude ----
-# Escriba su código aquí:
+p_rechazo <- 0.12
+p_aceptacion <- 1 - p_rechazo
+
+# a: probabilidad de primer intento rechazado y segundo aceptado
+prob_10a <- p_rechazo * p_aceptacion
+round(prob_10a, 4)
+
+# b: probabilidad de cuarta aceptada dado 3 rechazos previos
+prob_10b <- p_aceptacion
+round(prob_10b, 4)
+
+# c: probabilidad de más de 3 intentos
+prob_10c <- 1 - pgeom(q = 3, prob = p_aceptacion)
+round(prob_10c, 4)
 
 
 # Problema 11. Costo esperado de depuración ----
-# Escriba su código aquí:
+p <- 0.15
+costo <- 50
 
+# a: sacamos el promedio dividiendo 1 entre p
+esperanza <- 1 / p
+round(esperanza, 4)
+
+# b: multiplicamos el promedio por los 50 dólares de cada intento
+costo_total <- esperanza * costo
+round(costo_total, 4)
+
+# c: probabilidad de pasar de los 500 dólares (osea más de 10 intentos)
+prob_excede <- 1 - pgeom(q = 10, prob = p)
+round(prob_excede, 4)
+
+# d: comparamos de p = 0.30 y 85 
+p_nueva <- 0.30
+costo_nuevo <- 85
+esperanza_nueva <- 1 / p_nueva
+costo_total_nuevo <- esperanza_nueva * costo_nuevo
+
+tabla_11d <- data.frame(
+  Plataforma = c("Actual", "Nueva"),
+  Costo_Esperado = round(c(costo_total, costo_total_nuevo), 2)
+)
+print(tabla_11d)
 
 
 # Problema 12. Muestreo hasta detectar defectos ----
-# Escriba su código aquí:
+r <- 3
+p_defectuosa <- 0.04
+
+# a: probabilidad de que sean necesarias exactamente 50 piezas
+intentos <- 50
+fracasos_a <- intentos - r
+prob_12a <- dnbinom(x = fracasos_a, size = r, prob = p_defectuosa)
+round(prob_12a, 4)
+
+# b: número esperado de piezas a muestrear
+esperanza_b <- r / p_defectuosa
+round(esperanza_b, 4)
+
+# c: probabilidad de terminar con 40 piezas o menos
+intentos_c <- 40
+fracasos_c <- intentos_c - r
+prob_12c <- pnbinom(q = fracasos_c, size = r, prob = p_defectuosa)
+round(prob_12c, 4)
 
 # ==============================================================================
 # BLOQUE E: Distribución hipergeométrica ----
