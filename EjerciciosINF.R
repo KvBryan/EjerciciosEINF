@@ -148,16 +148,173 @@ minimo_agentes
 # ==============================================================================
 
 
-# Problema 7. Procesos de Poisson simultáneos e independientes ----
-# Escriba su código aquí:
+#Problema 7. Procesos de Poisson simultáneos e independientes ----
+#Escriba su código aquí:
+#Primer Inciso (a)
+#Tasas independientes por minuto
+lambda_compra <- 8
+lambda_consulta <- 12
+
+#Por propiedad aditiva: Y = X1 + X2 ~ Poisson(lambda_total)
+lambda_total <- lambda_compra + lambda_consulta
+
+#Probabilidad de recibir exactamente 25 solicitudes en total
+prob_7a <- dpois(
+  x = 25,
+  lambda = lambda_total
+)
+
+#Resultado con cuatro decimales
+round(prob_7a, 4)
+
+#INCISO B
+#Evento (i): Exactamente 10 de compra Y 15 de consulta
+prob_evento_i <- dpois(x = 10, lambda = lambda_compra) * 
+                  dpois(x = 15, lambda = lambda_consulta)
+
+#Evento (ii): 25 en total sin distinción de tipo
+prob_evento_ii <- dpois(x = 25, lambda = lambda_total)
+
+#Diferencia entre probabilidades
+diferencia_7b <- prob_evento_ii - prob_evento_i
+
+#Resultados con cuatro decimales
+round(prob_evento_i, 4)
+round(prob_evento_ii, 4)
+round(diferencia_7b, 4)
+
+#Tabla comparativa
+tabla_7b <- data.frame(
+  Evento = c(
+    "10 compra y 15 consulta",
+    "25 en total"
+  ),
+  Probabilidad = round(
+    c(
+      prob_evento_i,
+      prob_evento_ii
+    ),
+    4
+  )
+)
+
+print(tabla_7b)
+
+#Problema 8. Cajero con demanda variable ----
+#Escriba su código aquí:
+#INCISO A
+
+#Tasa por hora en alta demanda (11:00 a 13:00)
+lambda_hora_alta <- 8
+horas_alta <- 2
+
+#Lambda reescalado para 2 horas completos
+lambda_2h_alta <- lambda_hora_alta * horas_alta
+
+#Probabilidad de que lleguen exactamente 20 clientes
+prob_8a <- dpois(
+  x = 20,
+  lambda = lambda_2h_alta
+)
+
+#Resultado con cuatro decimales
+round(prob_8a, 4)
+
+#INCISO B Eventos independientes en subintervalos
+#Tasa para los primeros 30 min (0.5 horas) de alta demanda
+lambda_30min_alta <- 8 * 0.5
+
+#Tasa para la primera hora de demanda regular (13:00 a 16:00)
+lambda_1h_regular <- 3 * 1
+
+#Probabilidad de al menos 5 clientes en alta demanda (30 min)
+#P(A >= 5) = 1 - P(A <= 4)
+prob_A_8b <- ppois(
+  q = 4,
+  lambda = lambda_30min_alta,
+  lower.tail = FALSE
+)
+
+#Probabilidad de al menos 3 clientes en demanda regular (1 hora)
+#P(B >= 3) = 1 - P(B <= 2)
+prob_B_8b <- ppois(
+  q = 2,
+  lambda = lambda_1h_regular,
+  lower.tail = FALSE
+)
+
+#Probabilidad conjunta por independencia
+prob_8b <- prob_A_8b * prob_B_8b
+
+#Resultado con cuatro decimales
+round(prob_8b, 4)
+
+#INCISO C Jornada Completa de 5 horas
+#Lambda acumulado: 2 horas de alta (16) + 3 horas de regular (9)
+lambda_jornada <- (8 * 2) + (3 * 3)
+
+#Probabilidad de que el total supere los 25 clientes
+#P(X > 25) = 1 - P(X <= 25)
+prob_8c <- ppois(
+  q = 25,
+  lambda = lambda_jornada,
+  lower.tail = FALSE
+)
+
+#Resultado con cuatro decimales
+round(prob_8c, 4)
 
 
-# Problema 8. Cajero con demanda variable ----
-# Escriba su código aquí:
 
 
-# Problema 9. Validación de códigos de descuento ----
-# Escriba su código aquí:
+#Problema 9. Validación de códigos de descuento ----
+#Escriba su código aquí:
+
+#INCISO A EXITO EN EL QUINTO INTENTO
+#Probabilidad de éxito
+p_exito <- 0.08
+
+#En R, dgeom() cuenta fracasos antes del primer éxito (k - 1)
+intentos <- 5
+fracasos <- intentos - 1
+
+prob_9a <- dgeom(
+  x = fracasos,
+  prob = p_exito
+)
+
+#Resultado con cuatro decimales
+round(prob_9a, 4)
+
+#INCISO B MAS DE DIEZ INTENTOS REQUERIDOS
+#P(X > 10) equivale a tener más de 10 intentos (más de 9 fracasos)
+prob_9b <- pgeom(
+  q = 10 - 1,
+  prob = p_exito,
+  lower.tail = FALSE
+)
+
+#Resultado con cuatro decimales
+round(prob_9b, 4)
+
+#Inciso c Numero esperado de intentos
+
+#Esperanza matemática para la distribución geométrica
+esperanza_9c <- 1 / p_exito
+
+#Resultado con cuatro decimales
+round(esperanza_9c, 4)
+
+#inciso D falta de memoria tras 20 intentos 
+#Por la propiedad de falta de memoria: P(X > 20 + k | X > 20) = P(X > k)
+#El número esperado de intentos adicionales es el mismo valor esperado inicial:
+esperanza_adicional_9d <- 1 / p_exito
+
+#Resultado con cuatro decimales
+round(esperanza_adicional_9d, 4)
+
+
+
 
 # ==============================================================================
 # BLOQUE D: Distribución binomial negativa ----
