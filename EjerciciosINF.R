@@ -367,6 +367,7 @@ tabla_11d <- data.frame(
 print(tabla_11d)
 
 
+
 # Problema 12. Muestreo hasta detectar defectos ----
 r <- 3
 p_defectuosa <- 0.04
@@ -386,11 +387,6 @@ intentos_c <- 40
 fracasos_c <- intentos_c - r
 prob_12c <- pnbinom(q = fracasos_c, size = r, prob = p_defectuosa)
 round(prob_12c, 4)
-
-# ==============================================================================
-# BLOQUE E: Distribución hipergeométrica ----
-# Responsable: [Integrante 5]
-# ==============================================================================
 
 
 # Problema 13. Contactación hasta lograr entrevistas ----
@@ -445,6 +441,11 @@ tabla_comparativa_14 <- data.frame(
   Error_Absoluto = round(c(abs(p_8_nbin - p_8_pois), abs(p_10_nbin - p_10_pois)), 4)
 )
 print(tabla_comparativa_14)
+
+# ==============================================================================
+# BLOQUE E: Distribución hipergeométrica ----
+# Responsable: [Integrante 5]
+# ==============================================================================
 
 
 # Problema 15. Auditoría de un lote de servidores ----
