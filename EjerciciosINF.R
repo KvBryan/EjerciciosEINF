@@ -394,19 +394,106 @@ round(prob_12c, 4)
 
 
 # Problema 13. Contactación hasta lograr entrevistas ----
-# Escriba su código aquí:
+r <- 5
+p_entrevista <- 0.22
+
+# a: probabilidad de lograr las cinco entrevistas contactando exactamente a 20 personas
+contactos_a <- 20
+fracasos_a <- contactos_a - r
+prob_13a <- dnbinom(x = fracasos_a, size = r, prob = p_entrevista)
+round(prob_13a, 4)
+
+# b: número esperado de contactos requeridos
+esperanza_13b <- r / p_entrevista
+round(esperanza_13b, 4)
+
+# c: probabilidad de no lograr las cinco entrevistas con un máximo de 25 personas
+contactos_c <- 25
+fracasos_c <- contactos_c - r
+# P(Y > 25) = P(X > 20)
+prob_13c <- pnbinom(q = fracasos_c, size = r, prob = p_entrevista, lower.tail = FALSE)
+round(prob_13c, 4)
 
 
 # Problema 14. Detección de sobredispersión y elección de modelo ----
-# Escriba su código aquí:
+mu_14 <- 5
+var_14 <- 12
+
+# a: justificación de inadecuación de la distribución de Poisson
+# En Poisson E(X) = Var(X). Como aquí la varianza (12) > media (5), hay sobredispersión.
+diferencia_var_media <- var_14 - mu_14
+cat("Diferencia Varianza - Media =", diferencia_var_media, "\n")
+
+# b: determinación del parámetro 'size' en la parametrización de R
+size_14 <- (mu_14^2) / (var_14 - mu_14)
+round(size_14, 4)
+
+# c: cálculo de P(X = 8) y P(X >= 10) bajo ambos modelos y comparación
+# Modelo Binomial Negativa
+p_8_nbin <- dnbinom(x = 8, mu = mu_14, size = size_14)
+p_10_nbin <- pnbinom(q = 9, mu = mu_14, size = size_14, lower.tail = FALSE)
+
+# Modelo Poisson (lambda = 5)
+p_8_pois <- dpois(x = 8, lambda = mu_14)
+p_10_pois <- ppois(q = 9, lambda = mu_14, lower.tail = FALSE)
+
+# Tabla comparativa
+tabla_comparativa_14 <- data.frame(
+  Metrica = c("P(X = 8)", "P(X >= 10)"),
+  Binomial_Negativa = round(c(p_8_nbin, p_10_nbin), 4),
+  Poisson = round(c(p_8_pois, p_10_pois), 4),
+  Error_Absoluto = round(c(abs(p_8_nbin - p_8_pois), abs(p_10_nbin - p_10_pois)), 4)
+)
+print(tabla_comparativa_14)
 
 
 # Problema 15. Auditoría de un lote de servidores ----
-# Escriba su código aquí:
+m_servidores <- 5       # Servidores con fallas
+n_servidores <- 25      # Servidores sin fallas (30 - 5)
+k_muestra <- 8          # Servidores seleccionados
+
+# a: probabilidad de que ninguno presente falla: P(X = 0)
+prob_15a <- dhyper(x = 0, m = m_servidores, n = n_servidores, k = k_muestra)
+round(prob_15a, 4)
+
+# b: probabilidad de que al menos uno presente falla: P(X >= 1) = 1 - P(X = 0)
+prob_15b <- 1 - prob_15a
+round(prob_15b, 4)
+
+# c: probabilidad de que exactamente dos presenten falla: P(X = 2)
+prob_15c <- dhyper(x = 2, m = m_servidores, n = n_servidores, k = k_muestra)
+round(prob_15c, 4)
+
+# d: número esperado de servidores con falla en la muestra
+esperanza_15d <- k_muestra * (m_servidores / (m_servidores + n_servidores))
+round(esperanza_15d, 4)
 
 
 # Problema 16. Aproximación de la hipergeométrica por la binomial ----
-# Escriba su código aquí:
+m_mujeres <- 200        # Éxitos en la población
+n_hombres <- 600        # Fracasos en la población (800 - 200)
+k_muestra <- 30         # Muestra
+
+# a: probabilidad exacta P(X = 8) mediante la distribución hipergeométrica
+prob_16a_hyper <- dhyper(x = 8, m = m_mujeres, n = n_hombres, k = k_muestra)
+round(prob_16a_hyper, 4)
+
+# b: probabilidad P(X = 8) mediante la aproximación binomial (p = 0.25)
+p_binomial <- m_mujeres / (m_mujeres + n_hombres)
+prob_16b_bin <- dbinom(x = 8, size = k_muestra, prob = p_binomial)
+round(prob_16b_bin, 4)
+
+# c: comparación, cuantificación del error y aceptabilidad en función de n/N
+diferencia_16c <- abs(prob_16a_hyper - prob_16b_bin)
+n_total <- m_mujeres + n_hombres
+cociente_n_N <- k_muestra / n_total
+
+# Mostrar comparación
+tabla_16c <- data.frame(
+  Medida = c("Hipergeométrica Exacta", "Aproximación Binomial", "Diferencia Absoluta", "Cociente n/N"),
+  Valor = round(c(prob_16a_hyper, prob_16b_bin, diferencia_16c, cociente_n_N), 4)
+)
+print(tabla_16c)
 
 
 # ==============================================================================
