@@ -1,0 +1,317 @@
+PROBLEMA 13. Contactación hasta lograr entrevistas
+Un reclutador contacta candidatos hasta lograr cinco entrevistas concretadas. La proporción histórica de candidatos que aceptan una entrevista al ser contactados es del 22 %.
+
+Modelo probabilístico y justificación:
+Utilizamos la distribución binomial negativa, debido a que se realizan ensayos independientes y sucesivos (contactar candidatos) hasta alcanzar un número fijo de éxitos (5 entrevistas concretadas). Cada contacto tiene una probabilidad constante de aceptación del 22 % y los intentos se consideran mutuamente independientes.
+
+Supuestos del modelo:
+• Cada contacto tiene dos resultados posibles: aceptar la entrevista (éxito) o no aceptarla (fracaso).
+• La probabilidad de éxito (aceptar la entrevista) se mantiene constante en p = 0.22.
+• Los contactos son mutuamente independientes.
+• El proceso se detiene cuando se logra el r-ésimo éxito (r = 5).
+• La variable aleatoria Y representa el número total de personas contactadas hasta concretar las 5 entrevistas.
+• En R, la función dnbinom() modela la variable X que representa el número de fracasos antes de los r éxitos (X = Y - r).
+
+Por lo tanto:
+Y ~ Binomial Negativa(r = 5, p = 0.22)
+
+Literal a) Calcule la probabilidad de que se logren las cinco entrevistas contactando exactamente a veinte personas.
+Probabilidad solicitada:
+P(Y = 20) = P(X = 15)
+
+CODIGO EN R
+# Problema 13(a)
+r <- 5
+p <- 0.22
+contactos_a <- 20
+fracasos_a <- contactos_a - r
+prob_13a <- dnbinom(x = fracasos_a, size = r, prob = p)
+round(prob_13a, 4)
+
+RESULTADO
+0.0481
+
+Interpretación:
+Existe una probabilidad aproximada de 0.0481, equivalente al 4.81 %, de que se logren las cinco entrevistas contactando exactamente a veinte personas.
+
+
+Literal b) Determine el número esperado de contactos requeridos.
+Probabilidad solicitada:
+E(Y) = r / p
+
+CODIGO EN R
+# Problema 13(b)
+esperanza_13b <- r / p
+round(esperanza_13b, 4)
+
+RESULTADO
+22.7273
+
+Interpretación:
+El número esperado de personas a las que el reclutador debe contactar para poder concretar las cinco entrevistas es de aproximadamente 22.7273 (alrededor de 23 personas).
+
+
+Literal c) El reclutador dispone de tiempo para contactar a un máximo de veinticinco personas. Calcule la probabilidad de que no logre las cinco entrevistas dentro de ese límite.
+Probabilidad solicitada:
+P(Y > 25) = P(X > 20) = 1 - P(X ≤ 20)
+
+CODIGO EN R
+# Problema 13(c)
+contactos_c <- 25
+fracasos_c <- contactos_c - r
+prob_13c <- pnbinom(q = fracasos_c, size = r, prob = p, lower.tail = FALSE)
+round(prob_13c, 4)
+
+RESULTADO
+0.3282
+
+Interpretación:
+Existe una probabilidad aproximada de 0.3282, equivalente al 32.82 %, de que el reclutador no logre concretar las cinco entrevistas al contactar a un máximo de veinticinco personas.
+
+
+PROBLEMA 14. Detección de sobredispersión y elección de modelo
+Un estudio piloto sobre el número de defectos por lote en una línea de producción arroja media muestral igual a cinco defectos y varianza muestral igual a doce defectos^2. Un ingeniero propone modelar la variable mediante Poisson(λ = 5); otro propone la distribución binomial negativa con media cinco y varianza doce.
+
+Modelo probabilístico y justificación:
+Para el segundo modelo, se propone emplear la distribución binomial negativa debido a que la varianza muestral es estrictamente mayor que la media muestral, indicando la presencia de sobredispersión. La distribución de Poisson es inadecuada porque asume equidispersión (la varianza debe ser igual a la media).
+
+Supuestos del modelo:
+• La media del número de defectos por lote es mu = 5.
+• La varianza del número de defectos por lote es var = 12.
+• Para el modelo de Poisson, se asume Var(X) = E(X) = lambda = 5.
+• Para el modelo binomial negativa, la varianza es Var(X) = mu + mu^2/size = 12.
+• La variable aleatoria X representa el número de defectos por lote.
+
+Por lo tanto:
+Modelo de Poisson: X ~ Poisson(5)
+Modelo Binomial Negativa: X ~ Binomial Negativa(mu = 5, size = 3.5714)
+
+Literal a) Justifique, mediante la comparación entre media y varianza, por qué la distribución de Poisson resulta inadecuada.
+Comparación:
+Para una distribución de Poisson, se cumple estrictamente la propiedad de equidispersión: E(X) = Var(X). Dado que la varianza muestral (12) supera considerablemente a la media muestral (5), se incumple esta propiedad por un exceso de variabilidad (sobredispersión), haciendo inadecuada la distribución de Poisson.
+
+CODIGO EN R
+# Problema 14(a)
+mu_14 <- 5
+var_14 <- 12
+diferencia_var_media <- var_14 - mu_14
+diferencia_var_media
+
+RESULTADO
+7
+
+Interpretación:
+La diferencia positiva de 7 unidades entre la varianza muestral y la media muestral evidencia una marcada sobredispersión en los datos del lote, lo cual invalida el uso del supuesto de equidispersión del modelo de Poisson.
+
+
+Literal b) Bajo la parametrización de R para la binomial negativa (mu y size, donde Var(X) = µ + µ^2/size), determine el valor de size correspondiente a la media y la varianza observadas.
+Fórmula:
+Var(X) = mu + (mu^2 / size)  =>  12 = 5 + (25 / size)  =>  7 = 25 / size  =>  size = 25 / 7
+
+CODIGO EN R
+# Problema 14(b)
+size_14 <- (mu_14^2) / (var_14 - mu_14)
+round(size_14, 4)
+
+RESULTADO
+3.5714
+
+Interpretación:
+El valor de la dispersión o tamaño ('size') que modela adecuadamente la variabilidad de la binomial negativa a partir de la media y la varianza es de aproximadamente 3.5714.
+
+
+Literal c) Calcule P(X = 8) y P(X ≥ 10) bajo el modelo binomial negativa y bajo el modelo de Poisson. Comente la magnitud del error de emplear Poisson cuando el proceso presenta sobredispersión.
+Probabilidades solicitadas:
+Para P(X = 8):
+Modelo Binomial Negativa: P(X = 8)
+Modelo Poisson: P(X = 8)
+
+Para P(X ≥ 10) = 1 - P(X ≤ 9):
+Modelo Binomial Negativa: P(X ≥ 10)
+Modelo Poisson: P(X ≥ 10)
+
+CODIGO EN R
+# Problema 14(c)
+p_8_nbin <- dnbinom(x = 8, mu = mu_14, size = size_14)
+p_ge_10_nbin <- pnbinom(q = 9, mu = mu_14, size = size_14, lower.tail = FALSE)
+p_8_pois <- dpois(x = 8, lambda = mu_14)
+p_ge_10_pois <- ppois(q = 9, lambda = mu_14, lower.tail = FALSE)
+
+round(p_8_nbin, 4)
+round(p_8_pois, 4)
+round(p_ge_10_nbin, 4)
+round(p_ge_10_pois, 4)
+
+RESULTADOS
+Para P(X = 8):
+Binomial Negativa: 0.0573
+Poisson: 0.0653
+Diferencia absoluta: 0.0080
+
+Para P(X ≥ 10):
+Binomial Negativa: 0.1051
+Poisson: 0.0318
+Diferencia absoluta: 0.0733
+
+Interpretación:
+Al comparar los resultados, emplear Poisson en presencia de sobredispersión subestima severamente las probabilidades de la cola derecha: la probabilidad de observar al menos 10 defectos es del 10.51 % en el modelo ajustado, mientras que Poisson erróneamente estima que es apenas del 3.18 % (un error relativo superior al 230 %). Esto se debe a que Poisson asume una variabilidad menor a la real.
+
+
+PROBLEMA 15. Auditoría de un lote de servidores
+Un lote de treinta servidores contiene cinco con fallas de firmware. Un auditor selecciona ocho al azar, sin reemplazo, para inspección.
+
+Modelo probabilístico y justificación:
+Utilizamos la distribución hipergeométrica, debido a que se realiza un muestreo aleatorio sin reemplazo de una muestra de 8 elementos proveniente de una población finita pequeña de 30 servidores, donde cada servidor puede clasificarse en uno de dos estados posibles excluyentes: tener fallas de firmware (éxito) o no tener fallas (fracaso).
+
+Supuestos del modelo:
+• El tamaño total de la población de servidores es N = 30.
+• El número de elementos clasificados como éxitos (con fallas) en la población es M = 5.
+• El número de elementos clasificados como fracasos en la población es N - M = 25.
+• Se toma una muestra aleatoria de tamaño n = 8 sin reemplazo.
+• La variable aleatoria X representa la cantidad de servidores con fallas encontrados en la muestra.
+• En R, los parámetros corresponden a m = 5 (éxitos), n = 25 (fracasos en población) y k = 8 (muestra).
+
+Por lo tanto:
+X ~ H(N = 30, M = 5, n = 8)
+
+Literal a) Calcule la probabilidad de que ninguno de los servidores seleccionados presente falla.
+Probabilidad solicitada:
+P(X = 0)
+
+CODIGO EN R
+# Problema 15(a)
+m_servidores <- 5
+n_servidores <- 25
+k_muestra <- 8
+prob_15a <- dhyper(x = 0, m = m_servidores, n = n_servidores, k = k_muestra)
+round(prob_15a, 4)
+
+RESULTADO
+0.1848
+
+Interpretación:
+Existe una probabilidad aproximada de 0.1848, equivalente al 18.48 %, de que ninguno de los ocho servidores seleccionados aleatoriamente para la auditoría presente fallas de firmware.
+
+
+Literal b) Calcule la probabilidad de que al menos uno presente falla.
+Probabilidad solicitada:
+P(X ≥ 1) = 1 - P(X = 0)
+
+CODIGO EN R
+# Problema 15(b)
+prob_15b <- 1 - prob_15a
+round(prob_15b, 4)
+
+RESULTADO
+0.8152
+
+Interpretación:
+Existe una probabilidad aproximada de 0.8152, equivalente al 81.52 %, de que por lo menos uno de los servidores auditados muestre fallas de firmware.
+
+
+Literal c) Calcule la probabilidad de que exactamente dos presenten falla.
+Probabilidad solicitada:
+P(X = 2)
+
+CODIGO EN R
+# Problema 15(c)
+prob_15c <- dhyper(x = 2, m = m_servidores, n = n_servidores, k = k_muestra)
+round(prob_15c, 4)
+
+RESULTADO
+0.3026
+
+Interpretación:
+Existe una probabilidad aproximada de 0.3026, equivalente al 30.26 %, de que exactamente dos de los servidores seleccionados en la muestra tengan fallas de firmware.
+
+
+Literal d) Determine el número esperado de servidores con falla en la muestra.
+Probabilidad solicitada:
+E(X) = k * (m / (m + n))
+
+CODIGO EN R
+# Problema 15(d)
+esperanza_15d <- k_muestra * (m_servidores / (m_servidores + n_servidores))
+round(esperanza_15d, 4)
+
+RESULTADO
+1.3333
+
+Interpretación:
+El número esperado de servidores con fallas de firmware en una muestra aleatoria de tamaño ocho es de aproximadamente 1.3333 servidores.
+
+
+PROBLEMA 16. Aproximación de la hipergeométrica por la binomial
+Una encuesta selecciona a treinta personas al azar, sin reemplazo, de una empresa con ochocientos empleados, de los cuales doscientos son mujeres. Sea X el número de mujeres seleccionadas en la muestra.
+
+Modelo probabilístico y justificación:
+El modelo exacto corresponde a la distribución hipergeométrica debido a que el muestreo se realiza sin reemplazo en una población finita. Sin embargo, al ser el tamaño de la población grande (N = 800) en comparación con la muestra (n = 30), la probabilidad de éxito (proporción de mujeres en cada extracción) se altera de forma insignificante, justificando la aproximación por la distribución binomial con probabilidad p igual a la proporción poblacional (25 %).
+
+Supuestos del modelo:
+• La población total es N = 800 empleados.
+• El número total de mujeres es M = 200.
+• Se extrae una muestra de tamaño n = 30 sin reemplazo.
+• La probabilidad de éxito constante supuesta para el modelo binomial es p = M/N = 200/800 = 0.25.
+• La variable aleatoria X representa el número de mujeres en la muestra.
+
+Por lo tanto:
+Modelo Hipergeométrico exacto: X ~ H(N = 800, M = 200, n = 30)
+Modelo Binomial aproximado: X ~ Binomial(n = 30, p = 0.25)
+
+Literal a) Calcule P(X = 8) mediante la distribución hipergeométrica exacta.
+Probabilidad solicitada:
+P(X = 8)
+
+CODIGO EN R
+# Problema 16(a)
+m_mujeres <- 200
+n_hombres <- 600
+k_muestra <- 30
+prob_16a_hyper <- dhyper(x = 8, m = m_mujeres, n = n_hombres, k = k_muestra)
+round(prob_16a_hyper, 4)
+
+RESULTADO
+0.1624
+
+Interpretación:
+Utilizando el modelo hipergeométrico exacto, la probabilidad de seleccionar exactamente ocho mujeres de la empresa es de aproximadamente 0.1624, equivalente al 16.24 %.
+
+
+Literal b) Calcule la misma probabilidad empleando la aproximación por la distribución binomial con p igual a la proporción poblacional de mujeres.
+Probabilidad solicitada:
+P(X = 8) bajo aproximación binomial
+
+CODIGO EN R
+# Problema 16(b)
+p_binomial <- m_mujeres / (m_mujeres + n_hombres)
+prob_16b_bin <- dbinom(x = 8, size = k_muestra, prob = p_binomial)
+round(prob_16b_bin, 4)
+
+RESULTADO
+0.1593
+
+Interpretación:
+Utilizando la aproximación por la distribución binomial, la probabilidad de seleccionar exactamente ocho mujeres de la empresa es de aproximadamente 0.1593, equivalente al 15.93 %.
+
+
+Literal c) Compare ambos resultados, cuantifique la diferencia y discuta la aceptabilidad de la aproximación en función del cociente n/N.
+Métricas de comparación:
+Diferencia absoluta: |P(Hipergeométrica) - P(Binomial)|
+Cociente de muestreo: n / N
+
+CODIGO EN R
+# Problema 16(c)
+diferencia_16c <- abs(prob_16a_hyper - prob_16b_bin)
+n_total <- m_mujeres + n_hombres
+cociente_n_N <- k_muestra / n_total
+round(diferencia_16c, 4)
+round(cociente_n_N, 4)
+
+RESULTADOS
+Hipergeométrica Exacta: 0.1624
+Aproximación Binomial: 0.1593
+Diferencia absoluta: 0.0031
+Cociente n/N: 0.0375
+
+Interpretación:
+La diferencia absoluta entre ambos métodos es de apenas 0.0031 (0.31 %). La aproximación binomial se considera altamente aceptable dado que el cociente n/N = 30/800 = 0.0375 es menor que el límite estándar establecido del 5 % (0.05). Dado que la muestra representa solo el 3.75 % de la población, el efecto de no reemplazar a las personas seleccionadas es insignificante en el cálculo de probabilidad.
