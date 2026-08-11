@@ -11,15 +11,208 @@
 # ==============================================================================
 
 # Problema 1. Disponibilidad de un servidor ----
-# Escriba su código aquí:
+
+# Número de solicitudes procesadas por hora
+n <- 250
+
+# Probabilidad de que una solicitud falle
+p <- 0.03
+
+# Inciso (a): Probabilidad de que fallen menos de cinco solicitudes
+# P(X < 5) = P(X <= 4)
+
+prob_1a <- pbinom(
+  q = 4,
+  size = n,
+  prob = p
+)
+
+round(prob_1a, 4)
+
+# Inciso (b): Probabilidad de que fallen exactamente ocho solicitudes
+# P(X = 8)
+
+prob_1b <- dbinom(
+  x = 8,
+  size = n,
+  prob = p
+)
+
+round(prob_1b, 4)
+
+# Inciso (c): Probabilidad de ruptura del SLA
+# El SLA se rompe si fallan más de 10 solicitudes.
+# P(X > 10) = 1 - P(X <= 10)
+
+prob_1c_binomial <- pbinom(
+  q = 10,
+  size = n,
+  prob = p,
+  lower.tail = FALSE
+)
+
+round(prob_1c_binomial, 4)
+
+# Inciso (d): Aproximación mediante distribución de Poisson
+# Lambda = n * p
+
+lambda_1 <- n * p
+
+prob_1d_poisson <- ppois(
+  q = 10,
+  lambda = lambda_1,
+  lower.tail = FALSE
+)
+
+# Diferencia absoluta entre el resultado exacto y la aproximación
+
+diferencia_1d <- abs(
+  prob_1c_binomial - prob_1d_poisson
+)
+
+round(prob_1d_poisson, 4)
+round(diferencia_1d, 4)
+
+# Tabla comparativa del inciso (d)
+
+tabla_1d <- data.frame(
+  Metodo = c(
+    "Binomial exacta",
+    "Aproximacion Poisson"
+  ),
+  Probabilidad_Ruptura_SLA = round(
+    c(
+      prob_1c_binomial,
+      prob_1d_poisson
+    ),
+    4
+  )
+)
+
+print(tabla_1d)
 
 
 # Problema 2. Prueba psicométrica y afirmación del reclutador ----
-# Escriba su código aquí:
+
+# Número de candidatos evaluados
+n <- 20
+
+# Tasa histórica de aprobación
+p <- 0.40
+
+# Inciso (a): Probabilidad de observar 12 o más aprobados
+# P(X >= 12) = 1 - P(X <= 11)
+
+prob_2a <- pbinom(
+  q = 11,
+  size = n,
+  prob = p,
+  lower.tail = FALSE
+)
+
+round(prob_2a, 4)
+
+# Inciso (b): Proporción observada de aprobados
+# Se usa para comparar con la tasa histórica de 40%
+
+aprobados_observados <- 12
+
+proporcion_observada <- aprobados_observados / n
+
+round(proporcion_observada, 4)
+
+# Criterio de decisión con nivel de significancia de 5%
+# Si P(X >= 12) < 0.05, existe evidencia suficiente
+# para sostener que el grupo tiene una tasa superior a 40%.
+
+if (prob_2a < 0.05) {
+  cat("Existe evidencia suficiente para respaldar que el grupo tiene una tasa de aprobacion superior al 40%.\n")
+} else {
+  cat("No existe evidencia suficiente al 5% para afirmar que el grupo tiene una tasa de aprobacion superior al 40%.\n")
+}
 
 
 # Problema 3. Planificación de certificados ----
-# Escriba su código aquí:
+
+# Número de estudiantes inscritos
+n <- 80
+
+# Tasa histórica de finalización
+p <- 0.15
+
+# Inciso (a): Probabilidad de que al menos 15 estudiantes finalicen
+# P(X >= 15) = 1 - P(X <= 14)
+
+prob_3a <- pbinom(
+  q = 14,
+  size = n,
+  prob = p,
+  lower.tail = FALSE
+)
+
+round(prob_3a, 4)
+
+# Inciso (b): Número esperado de finalizaciones
+# E(X) = n * p
+
+esperanza_3b <- n * p
+
+# Desviación estándar
+# SD(X) = sqrt(n * p * (1 - p))
+
+desviacion_3b <- sqrt(
+  n * p * (1 - p)
+)
+
+round(esperanza_3b, 4)
+round(desviacion_3b, 4)
+
+# Inciso (c): Número mínimo de certificados para cubrir
+# la demanda con una probabilidad de al menos 95%.
+# Se busca el menor valor c tal que P(X <= c) >= 0.95.
+
+certificados_minimos <- qbinom(
+  p = 0.95,
+  size = n,
+  prob = p
+)
+
+round(certificados_minimos, 4)
+
+# Verificación de que 17 certificados cumplen y 16 no cumplen
+
+prob_cobertura_16 <- pbinom(
+  q = certificados_minimos - 1,
+  size = n,
+  prob = p
+)
+
+prob_cobertura_17 <- pbinom(
+  q = certificados_minimos,
+  size = n,
+  prob = p
+)
+
+round(prob_cobertura_16, 4)
+round(prob_cobertura_17, 4)
+
+# Tabla de verificación
+
+tabla_3c <- data.frame(
+  Certificados = c(
+    certificados_minimos - 1,
+    certificados_minimos
+  ),
+  Probabilidad_Cobertura = round(
+    c(
+      prob_cobertura_16,
+      prob_cobertura_17
+    ),
+    4
+  )
+)
+
+print(tabla_3c)
 
 
 # ==============================================================================
